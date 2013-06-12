@@ -96,6 +96,7 @@ namespace ClipboardMonitor
 
 		/// <summary>
 		/// The main entry point for the application.123
+        /// 456
 		/// </summary>
 		[STAThread]
 		static void Main() 

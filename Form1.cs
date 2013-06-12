@@ -95,12 +95,9 @@ namespace ClipboardMonitor
 		#endregion
 
 		/// <summary>
-<<<<<<< HEAD
+
 		/// The main entry point for the application.123
         /// 456
-=======
-		/// The main entry point for the application. 1
->>>>>>> aaa53a1570e34959a6023c893f8dd9f4c98700b0
 		/// </summary>
 		[STAThread]
 		static void Main() 

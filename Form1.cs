@@ -13,6 +13,50 @@ namespace ClipboardMonitor
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
+
+        ///
+        /// 使用系統 kernel32.dll 進行轉換
+        ///
+        private const int LocaleSystemDefault = 0x0800;
+        private const int LcmapSimplifiedChinese = 0x02000000;
+        private const int LcmapTraditionalChinese = 0x04000000;
+
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int LCMapString(int locale, int dwMapFlags, string lpSrcStr, int cchSrc,
+                                              [Out] string lpDestStr, int cchDest);
+
+        public static string ToSimplified(string argSource)
+        {
+            var t = new String(' ', argSource.Length);
+            LCMapString(LocaleSystemDefault, LcmapSimplifiedChinese, argSource, argSource.Length, t, argSource.Length);
+            return t;
+        }
+
+        public static string ToTraditional(string argSource)
+        {
+            var t = new String(' ', argSource.Length);
+            LCMapString(LocaleSystemDefault, LcmapTraditionalChinese, argSource, argSource.Length, t, argSource.Length);
+            return t;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		[DllImport("User32.dll")]
 		protected static extern int SetClipboardViewer(int hWndNewViewer);
 
@@ -84,7 +128,7 @@ namespace ClipboardMonitor
             // 
             // Form1
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 18);
             this.ClientSize = new System.Drawing.Size(510, 421);
             this.Controls.Add(this.richTextBox1);
             this.Name = "Form1";
@@ -135,11 +179,15 @@ namespace ClipboardMonitor
 			try
 			{
                 //richTextBox1.LoadFile(@"C:\users\nherre\desktop\test.rtf");
-                IDataObject iData = new DataObject();  
-				iData = Clipboard.GetDataObject();
+                //IDataObject iData = new DataObject();  
+				//iData = Clipboard.GetDataObject();
+
+                string original = Clipboard.GetText();
+                Clipboard.SetText(ToTraditional(original));
+                richTextBox1.Clear();
                 richTextBox1.AppendText("\r\n");
                 richTextBox1.Paste();
-                richTextBox1.SaveFile(@"C:\users\nherre\desktop\test.rtf");
+                //richTextBox1.SaveFile(@"C:\users\nherre\desktop\test.rtf");
 
                 #region IF Logic
                 //If logic

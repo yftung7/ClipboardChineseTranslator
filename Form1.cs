@@ -19,6 +19,7 @@ namespace ClipboardMonitor
         ///
         private const int LocaleSystemDefault = 0x0800;
         private const int LcmapSimplifiedChinese = 0x02000000;
+        private NotifyIcon myNotify;
         private const int LcmapTraditionalChinese = 0x04000000;
 
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
@@ -67,14 +68,10 @@ namespace ClipboardMonitor
 		public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
 		private System.Windows.Forms.RichTextBox richTextBox1;
-        
 
-		IntPtr nextClipboardViewer;
 
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        IntPtr nextClipboardViewer;
+        private IContainer components;
 
 		public Form1()
 		{
@@ -112,7 +109,10 @@ namespace ClipboardMonitor
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.myNotify = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -126,6 +126,13 @@ namespace ClipboardMonitor
             this.richTextBox1.Text = "richTextBox1";
             this.richTextBox1.WordWrap = false;
             // 
+            // myNotify
+            // 
+            this.myNotify.Icon = ((System.Drawing.Icon)(resources.GetObject("myNotify.Icon")));
+            this.myNotify.Text = "ClipboardChineseTranslator";
+            this.myNotify.Visible = true;
+            this.myNotify.DoubleClick += new System.EventHandler(this.myNotify_DoubleClick);
+            // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 18);
@@ -133,6 +140,7 @@ namespace ClipboardMonitor
             this.Controls.Add(this.richTextBox1);
             this.Name = "Form1";
             this.Text = "Clipboard Monitor Example";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.ResumeLayout(false);
 
 		}
@@ -225,5 +233,17 @@ namespace ClipboardMonitor
 				MessageBox.Show(e.ToString());
 			}
 		}
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState)
+                Hide();
+        }
+
+        private void myNotify_DoubleClick(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
 	}
 }
